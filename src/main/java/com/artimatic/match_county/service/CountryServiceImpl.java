@@ -62,21 +62,21 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     public List<Country> getByContryCode(String code) {
-        return getCountries().stream().filter(country -> country.getIso2Code().equals(code)).collect(Collectors.toList());
+        return countryRepository.getCountries().stream().filter(country -> country.getIso2Code().equals(code)).collect(Collectors.toList());
     }
 
     @Override
     public List<Country> getByMathRegion(String region) {
-        return getCountries().stream().filter( reg -> reg.getRegion().getValue().equals(region)).collect(Collectors.toList());
+        return countryRepository.getCountries().stream().filter( reg -> reg.getRegion().getValue().equals(region)).collect(Collectors.toList());
     }
 
     @Override
     public List<Country> getByIncomeLevel(String incomeLevel) {
-        return getCountries().stream().filter( reg -> reg.getIncomeLevel().getValue().equals(incomeLevel)).collect(Collectors.toList());
+        return countryRepository.getCountries().stream().filter( reg -> reg.getIncomeLevel().getValue().equals(incomeLevel)).collect(Collectors.toList());
     }
 
     @Override
     public List<Country> getBylendingType(String lendingType) {
-        return getCountries().stream().filter( reg -> reg.getLendingType().getValue().equals(lendingType)).collect(Collectors.toList());
+        return countryRepository.getCountries().stream().filter( reg -> reg.getLendingType().getValue().equals(lendingType)).collect(Collectors.toList());
     }
 }
