@@ -11,7 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,8 +58,52 @@ public class CountryServiceImpl implements CountryService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        // return all countries form all pages
         return countries1;
+    }
+
+    @Override
+    public List<Country> getCountries(String code, Optional<String> region, Optional<String> incomeLevel, Optional<String> lendingType) {
+        getCountries();
+        List<Country> countries = new ArrayList<>();
+        Predicate<Country> predicate = getCountryPredicate(code);
+        Predicate<Country> regionPredicate = getRegionPredicate(region);
+        Predicate<Country> incomeLevelPredicate = getIncomeLevelPredicate(incomeLevel);
+        Predicate<Country> lendingTypePredicate = getLendingTypePredicate(lendingType);
+        countries.addAll(this.countries.stream().filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate).or(predicate)).collect(Collectors.toList()));
+        return countries;
+    }
+
+    private Predicate<Country> getCountryPredicate(String code) {
+        return c -> {
+                return c.getIso2Code().equals(code);
+            };
+    }
+
+    private Predicate<Country> getRegionPredicate(Optional<String> region) {
+        return c -> {
+                if(region.isPresent()) {
+                    return c.getRegion().getIso2code().equals(region.get());
+                }
+                return false;
+            };
+    }
+
+    private Predicate<Country> getIncomeLevelPredicate(Optional<String> incomeLevel) {
+        return c -> {
+                if(incomeLevel.isPresent()) {
+                    return c.getIncomeLevel().getIso2code().equals(incomeLevel.get());
+                }
+                return false;
+            };
+    }
+
+    private Predicate<Country> getLendingTypePredicate(Optional<String> lendingType) {
+        return c -> {
+                if(lendingType.isPresent()) {
+                    return c.getLendingType().getIso2code().equals(lendingType.get());
+                }
+                return false;
+            };
     }
 
 
