@@ -43,7 +43,7 @@ public class CountryServiceImpl implements CountryService{
         Page page=null;
         try {
             // to get the country on the first page
-            ResponseEntity<Object[]> countries= restTemplate.getForEntity("http://api.worldbank.org/country?format=json", Object[].class);
+            ResponseEntity<Object[]> countries= restTemplate.getForEntity("http://api.worldbank.org/v2/country?format=json", Object[].class);
 
             // get the page detail form the the JSON response
           page= mapper.convertValue(countries.getBody()[0], Page.class);
@@ -52,7 +52,7 @@ public class CountryServiceImpl implements CountryService{
 
             // to get the country on the rest of the page
             for(int i =2; i<=page.getPages(); i++){
-                ResponseEntity<Object[]> countriList= restTemplate.getForEntity("http://api.worldbank.org/country?format=json&page="+i, Object[].class);
+                ResponseEntity<Object[]> countriList= restTemplate.getForEntity("http://api.worldbank.org/v2/country?format=json&page="+i, Object[].class);
                 countries1.addAll(mapper.convertValue(countriList.getBody()[1],  new TypeReference<List<Country>>(){}));
             }
         }catch (Exception e){
@@ -63,13 +63,12 @@ public class CountryServiceImpl implements CountryService{
 
     @Override
     public List<Country> getCountries(String code, Optional<String> region, Optional<String> incomeLevel, Optional<String> lendingType) {
-        getCountries();
         List<Country> countries = new ArrayList<>();
         Predicate<Country> predicate = getCountryPredicate(code);
         Predicate<Country> regionPredicate = getRegionPredicate(region);
         Predicate<Country> incomeLevelPredicate = getIncomeLevelPredicate(incomeLevel);
         Predicate<Country> lendingTypePredicate = getLendingTypePredicate(lendingType);
-        countries.addAll(this.countries.stream().filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate).or(predicate)).collect(Collectors.toList()));
+        countries.addAll(getCountries().stream().filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate).or(predicate)).collect(Collectors.toList()));
         return countries;
     }
 
