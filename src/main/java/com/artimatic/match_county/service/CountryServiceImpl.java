@@ -2,6 +2,7 @@ package com.artimatic.match_county.service;
 
 import com.artimatic.match_county.Repository.CountryRepository;
 import com.artimatic.match_county.model.Country;
+import com.artimatic.match_county.model.CountryDTO;
 import com.artimatic.match_county.model.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,13 +63,13 @@ public class CountryServiceImpl implements CountryService{
     }
 
     @Override
-    public List<Country> getCountries(String code, Optional<String> region, Optional<String> incomeLevel, Optional<String> lendingType) {
-        List<Country> countries = new ArrayList<>();
+    public List<CountryDTO> getCountries(String code, Optional<String> region, Optional<String> incomeLevel, Optional<String> lendingType) {
+        List<CountryDTO> countries = new ArrayList<>();
         Predicate<Country> predicate = getCountryPredicate(code);
         Predicate<Country> regionPredicate = getRegionPredicate(region);
         Predicate<Country> incomeLevelPredicate = getIncomeLevelPredicate(incomeLevel);
         Predicate<Country> lendingTypePredicate = getLendingTypePredicate(lendingType);
-        countries.addAll(getCountries().stream().filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate).or(predicate)).collect(Collectors.toList()));
+        countries.addAll(getCountries().stream().filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate).or(predicate)).map(country -> new CountryDTO(country.getName(),country.getCapitalCity())).collect(Collectors.toList()));
         return countries;
     }
 

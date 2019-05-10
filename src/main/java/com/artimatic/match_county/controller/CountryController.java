@@ -31,18 +31,5 @@ public class CountryController {
         return responseService.getResponse(countryService.getCountries(code, region, incomeLevel, lendingType));
     }
 
-//    @GetMapping("/region")
-//    public ResponseEntity<?> searchRegion(@RequestParam("region") String region){
-//        return responseService.getResponse(countryService.getByMathRegion(region));
-//    }
-//    @GetMapping("/incomeLevel")
-//    public ResponseEntity<?> searchByIncomeLevel(@RequestParam("incomeLevel") String incomeLevel){
-//        return responseService.getResponse(countryService.getByIncomeLevel(incomeLevel));
-//    }
-//    @GetMapping("/lendingType")
-//    public ResponseEntity<?> searchByLendingType(@RequestParam("lendingType") String lendingType){
-//        return responseService.getResponse(countryService.getBylendingType(lendingType));
-//    }
-
 
 }
